@@ -98,10 +98,15 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "e445da17-e6be-4f13-945b-2d0a63c835ff"
   }
 }
