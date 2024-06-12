@@ -8,9 +8,13 @@ import { OlympicService } from './core/services/olympic.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  public isNoError!: boolean;
   constructor(private olympicService: OlympicService) {}
 
   ngOnInit(): void {
-    this.olympicService.loadInitialData().pipe(take(1)).subscribe();
+    this.olympicService.loadInitialData().pipe(take(1)).subscribe({
+      complete: () => this.isNoError = true,
+      error: () => this.isNoError = false
+    });
   }
 }

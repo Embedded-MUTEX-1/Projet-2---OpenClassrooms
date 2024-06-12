@@ -1,1 +1,9 @@
-<router-outlet></router-outlet>
+<div *ngIf="isNoError;else error">
+    <router-outlet></router-outlet>
+</div>
+<ng-template #error>
+    <div class="center">
+        <h2>Error while data recovery</h2>
+    </div>
+</ng-template>
+
