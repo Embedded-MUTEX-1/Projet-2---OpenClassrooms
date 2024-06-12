@@ -1,22 +1,10 @@
 <h1>Medals per Country</h1>
 
 <div class="details">
-    <div>
-        <p>Number of JOs</p>
-        <p>{{numOfJos}}</p>
-    </div>
-
-    <div>
-        <p>Number of country</p>
-        <p>{{numOfCountries}}</p>
-    </div>
+    <app-card [text]="'Number of JOs'" [count]="numOfJos"></app-card>
+    <app-card [text]="'Number of country'" [count]="numOfCountries"></app-card>
 </div>
 
-<div>
-    <apx-chart 
-    [series]="chartOptions.series!" 
-    [chart]="chartOptions.chart!" 
-    [title]="chartOptions.title!" 
-    [labels]="chartOptions.labels!"
-    [dataLabels]="chartOptions.dataLabels!"></apx-chart>
+<div id="chart">
+    <canvas id="piChart"></canvas>
 </div>

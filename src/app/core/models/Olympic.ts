@@ -11,7 +11,9 @@ example of an olympic country:
 import { Participation } from "./Participation";
 
 export class Olympic {
-    id!: number;
-    country!: string;
-    participations!: Participation[];
-  }
+    constructor(
+        public id: number,
+        public country: string,
+        public participations: Participation[]
+    ) {}
+}

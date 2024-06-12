@@ -1,0 +1,15 @@
+<h1>{{title}}</h1>
+
+<div>
+    <app-card [text]="'Number of entries'" [count]="entriesCount"></app-card>
+    <app-card [text]="'Total number medals'" [count]="medalsCount"></app-card>
+    <app-card [text]="'Total number athletes'" [count]="athlethesCount"></app-card>
+</div>
+
+<div id="chart">
+    <canvas id="lineChart"></canvas>
+</div>
+
+<div>
+    <a routerLink="">Back to dashboard</a>
+</div>

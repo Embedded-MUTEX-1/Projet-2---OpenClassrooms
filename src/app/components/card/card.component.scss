@@ -1,0 +1,22 @@
+div {
+    width: fit-content;
+    text-align: center;
+    border: 2px solid #02838f;
+    border-radius: 7px;
+    padding: 2px 10px 2px 10px;
+    margin: 10px 20px 10px 20px;
+}
+
+div p {
+    width: fit-content;
+    margin: auto;
+    color: #727272;
+}
+
+@media (max-width: 425px) {
+    div {
+        padding: 2px 5px 2px 5px;
+        margin: 5px 10px 5px 10px;
+        font-size: small;
+    }
+}

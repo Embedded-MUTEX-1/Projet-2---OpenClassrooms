@@ -1,24 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexTitleSubtitle,
-  ApexDataLabels,
-  ApexNonAxisChartSeries
-} from 'ng-apexcharts';
-import { Observable } from 'rxjs';
-import { Olympic } from 'src/app/core/models/Olympic';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Chart, registerables } from 'chart.js';
 import { OlympicService } from 'src/app/core/services/olympic.service';
-
-export type ChartOptions = {
-  chart: ApexChart;
-  series: ApexNonAxisChartSeries;
-  labels: string[];
-  dataLabels: ApexDataLabels;
-  title: ApexTitleSubtitle;
-};
 
 @Component({
   selector: 'app-home',
@@ -26,34 +9,43 @@ export type ChartOptions = {
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public olympics$!: Observable<Olympic[]>;
   public numOfJos!: number;
   public numOfCountries!: number;
-  public chartOptions!: Partial<ChartOptions>;
 
-  constructor(private olympicService: OlympicService) {}
+  constructor(private olympicService: OlympicService, private routerService: Router) {
+    Chart.register(...registerables);
+  }
 
-  ngOnInit(): void {
-    this.olympics$ = this.olympicService.getOlympics();
-    this.olympics$.subscribe(olympics => {
-      this.numOfCountries = olympics.length;
-      this.numOfJos = olympics.reduce((acc, val) => acc + val.participations.length, 0);
-      this.chartOptions = {
-        title: {
-          text: "Graphic medals per contry"
-        },
-        labels: olympics.map<string>((olympic) => olympic.country),
-        dataLabels: {
-          formatter: function (val, opts) {
-              return opts.w.config.series[opts.seriesIndex]
+  ngOnInit() {
+    this.olympicService.getOlympics().subscribe(olympics => {
+      if(olympics.length) {
+        this.numOfCountries = olympics.length;
+        this.numOfJos = olympics.reduce((acc, val) => acc + val.participations.length, 0);
+        let chart = new Chart("piChart", {
+          type: 'pie',
+          data: {
+            labels: olympics.map<string>((olympic) => olympic.country),
+            datasets: [{
+              label: "Graphic medals per contry",
+              data:  olympics.map<number>((olympic) => olympic.participations.reduce((acc, val) => acc + val.medalsCount, 0)),
+              borderWidth: 1
+            }]
           },
-        },
-        series: olympics.map<number>((olympic) => olympic.participations.reduce((acc, val) => acc + val.medalsCount, 0)),
-        chart: {
-          height: 250,
-          type: "pie"
-        },
+          options: {
+            plugins: {
+              legend: {
+                onClick: (e, legendItem, legend) => {
+                  this.navToCountryDetail(legendItem.index!);
+                },
+              }
+            }
+          }
+        })
       }
-    });
+    })
+  }
+
+  private navToCountryDetail(index: number): void {
+    this.routerService.navigateByUrl(`/detail/${index}`)
   }
 }
