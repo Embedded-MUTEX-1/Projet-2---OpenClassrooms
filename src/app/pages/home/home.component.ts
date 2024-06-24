@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
+import { Subscription } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -8,16 +9,20 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   public numOfJos!: number;
   public numOfCountries!: number;
+  public subcription!: Subscription;
 
   constructor(private olympicService: OlympicService, private routerService: Router) {
     Chart.register(...registerables);
   }
+  ngOnDestroy(): void {
+    this.subcription.unsubscribe();
+  }
 
   ngOnInit() {
-    this.olympicService.getOlympics().subscribe(olympics => {
+    this.subcription = this.olympicService.getOlympics().subscribe(olympics => {
       if(olympics.length) {
         this.numOfCountries = olympics.length;
         this.numOfJos = olympics.reduce((acc, val) => acc + val.participations.length, 0);

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympic } from 'src/app/core/models/Olympic';
-import { Observable, partition, tap } from 'rxjs';
+import { Observable, Subscription, partition, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 
@@ -10,21 +10,25 @@ import { Chart, registerables } from 'chart.js';
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss']
 })
-export class DetailComponent implements OnInit {
+export class DetailComponent implements OnInit, OnDestroy {
   public olympics$!: Observable<Olympic[]>;
-  public title!: string
-  public entriesCount!: number
-  public athlethesCount!: number
-  public medalsCount!: number
+  public title!: string;
+  public entriesCount!: number;
+  public athlethesCount!: number;
+  public medalsCount!: number;
+  public subcription!: Subscription;
 
   constructor(private olympicService: OlympicService, private route: ActivatedRoute) {
     Chart.register(...registerables);
+  }
+  ngOnDestroy(): void {
+    this.subcription.unsubscribe();
   }
 
   ngOnInit(): void {
     let olympics = this.olympicService.getOlympics();
     
-    olympics.subscribe(olympics => {
+    this.subcription = olympics.subscribe(olympics => {
       let olympic = olympics[this.route.snapshot.params['index']];
       this.title = olympic.country;
       this.entriesCount = olympic.participations.length;
