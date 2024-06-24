@@ -9,9 +9,19 @@ h1 {
     margin-bottom: 20px;
 }
 
-div {
+#details {
     display: flex;
     justify-content: center;
+}
+
+#chart {
+    margin: auto;
+    width: 80%;
+}
+
+#back {
+    margin-top: 10px;
+    text-align: center;
 }
 
 a {
