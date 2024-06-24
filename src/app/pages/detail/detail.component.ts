@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { Observable, Subscription, partition, tap } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 
 @Component({
@@ -18,7 +18,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   public medalsCount!: number;
   public subcription!: Subscription;
 
-  constructor(private olympicService: OlympicService, private route: ActivatedRoute) {
+  constructor(private olympicService: OlympicService, private route: ActivatedRoute, private routerService: Router) {
     Chart.register(...registerables);
   }
   ngOnDestroy(): void {
@@ -26,10 +26,14 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let olympics = this.olympicService.getOlympics();
-    
-    this.subcription = olympics.subscribe(olympics => {
+    this.subcription = this.olympicService.getOlympics().subscribe(olympics => {
       let olympic = olympics[this.route.snapshot.params['index']];
+
+      if(olympic == undefined) {
+        this.routerService.navigateByUrl("**");
+        return;
+      }
+        
       this.title = olympic.country;
       this.entriesCount = olympic.participations.length;
       this.medalsCount = olympic.participations.reduce<number>((acc, partition) => acc += partition.medalsCount, 0);
