@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       if(olympics.length) {
         this.numOfCountries = olympics.length;
         this.numOfJos = olympics.reduce((acc, val) => acc + val.participations.length, 0);
-        let chart = new Chart("piChart", {
+        new Chart("piChart", {
           type: 'pie',
           data: {
             labels: olympics.map<string>((olympic) => olympic.country),

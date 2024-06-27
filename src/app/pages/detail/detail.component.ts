@@ -27,7 +27,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subcription = this.olympicService.getOlympics().subscribe(olympics => {
-      let olympic = olympics[this.route.snapshot.params['index']];
+      const olympic = olympics[this.route.snapshot.params['index']];
 
       if(olympic == undefined) {
         this.routerService.navigateByUrl("**");
@@ -39,7 +39,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       this.medalsCount = olympic.participations.reduce<number>((acc, partition) => acc += partition.medalsCount, 0);
       this.athlethesCount = olympic.participations.reduce<number>((acc, partition) => acc += partition.athleteCount, 0);
 
-      let chart = new Chart("lineChart", {
+      new Chart("lineChart", {
         type: 'line',
         data: {
           labels: olympic.participations.map((partition) => partition.year).sort((a, b) => a - b),
